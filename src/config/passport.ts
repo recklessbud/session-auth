@@ -13,18 +13,30 @@ import mongoose from "mongoose";
 
 const LocalStrategy = passportLocal.Strategy;
 
+// passport.serializeUser<any, any>((req, user, done) => {
+//     done(undefined, user);
+// });
+
+// passport.deserializeUser((id, done) => {
+//     User.findById(id, (err: NativeError, user: Users) => done(err, user));
+// });
+
 passport.serializeUser<any, any>((req, user, done) => {
     done(undefined, user);
-});
-
-passport.deserializeUser((id, done) => {
-    User.findById(id, (err: NativeError, user: Users) => done(err, user));
-});
+  });
+  
+  passport.deserializeUser(async (id, done) => {
+    try {
+      return done(null, await User.findById(id));
+    } catch (error) {
+      return done(error);
+    }
+  });
 
 
 passport.use(new LocalStrategy({ usernameField: "username" }, (username, password, done) => {
-    User.findOne({ username: username.toLowerCase() }, (err: NativeError, user: Users) => {
-        if (err) { return done(err); }
+    User.findOne({ username: username.toLowerCase()})
+     .then((user: Users | null) => {
         if (!user) {
             return done(undefined, false, { message: `Email ${username} not found.` });
         }
@@ -33,7 +45,10 @@ passport.use(new LocalStrategy({ usernameField: "username" }, (username, passwor
             if (isMatch) {
                 return done(null, user);
             }
-            return done(null, false, { message: "Invalid email or password." });
-        });
-    });
+            return done(null, false, { message: "Invalid username or password." });
+        })
+  })
+.catch((err: NativeError) => {
+    return done(err);
+})
 }));
