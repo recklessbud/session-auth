@@ -1,0 +1,23 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>this is profile</h2>
+    <form action="/api/v1/auth/account/profile" method="POST">
+        <label for="username">username</label>
+        <input type="text" name="username" id="username" value="<%= user.username %>">
+        <label for="email">email</label>
+        <input type="email" name="email" id="email" value="<%= user.email %>">
+        <input type="submit" value="update">
+    </form>
+
+    <form action="/api/v1/auth/account/delete" method="POST">
+        <input type="hidden" name="_method" value="DELETE">
+        <!-- <input type="submit" value="delete"> -->
+         <button type="submit">delete</button>
+    </form>
+</body>
+</html>

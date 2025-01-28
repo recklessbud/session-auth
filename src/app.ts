@@ -12,6 +12,7 @@ import session from "express-session"
 // import mongoose, {mongoOptions} from "mongoose";
 // import { ConnectMongoOptions } from "connect-mongo/build/main/lib/MongoStore";
 import { MongoClientOptions } from "mongodb";
+import MethodOverride from "method-override";
 
 const app = express();
 dotenv.config({path:  path.resolve(__dirname, './config/.env')});
@@ -19,7 +20,7 @@ dotenv.config({path:  path.resolve(__dirname, './config/.env')});
 import connectDB from "./config/dbconn";
 import * as passportConfig from "./config/passport";
 import homeRoutes from "./routes/homeRoutes";
-import authRoutes from "./routes/authRoutes";
+import authRoutes from './routes/authRoutes';
 //middleware
 
 connectDB()
@@ -37,11 +38,13 @@ app.use(session({
     store: new MongoStore({
         mongoUrl: process.env.MONGO_URI!,
         mongoOptions: {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-          }as MongoClientOptions
+            // useNewUrlParser: true,
+            // useUnifiedTopology: true
+          } as MongoClientOptions
     })
-}));
+})); 
+
+app.use(MethodOverride("_method"));
 
 
 //passport configure
