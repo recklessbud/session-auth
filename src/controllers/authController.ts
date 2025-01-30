@@ -196,7 +196,6 @@ export const deleteAccount = async (req: Request, res: Response, next: NextFunct
         // Log out the user
         req.logout((err: any) => {
             if (err) { return next(err); }
-            res.redirect("/");
         });
         res.redirect("/");
       } catch (err: any) {
