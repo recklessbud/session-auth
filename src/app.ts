@@ -13,6 +13,7 @@ import session from "express-session"
 // import { ConnectMongoOptions } from "connect-mongo/build/main/lib/MongoStore";
 import { MongoClientOptions } from "mongodb";
 import MethodOverride from "method-override";
+// import { createClient } from "redis";
 
 const app = express();
 dotenv.config({path:  path.resolve(__dirname, './config/.env')});
@@ -24,9 +25,22 @@ import authRoutes from './routes/authRoutes';
 //middleware
 
 connectDB()
+
+// redisClient.on('error', (err)=>{
+//     console.log(`Redis Client Error ${err}`);
+// })
+
+
+// redisClient.on('connect', ()=>{
+//     console.log(`Redis Client Connected`);
+// })
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+if(process.env.NODE_ENV === "development"){
 app.use(logger("dev"));
+// console.log("sss")
+}
 app.set("view engine", "ejs");
 app.set("views", path.resolve(__dirname, "./views"));
 app.use(express.static(path.resolve(__dirname, "./public")));
@@ -60,6 +74,6 @@ app.use((req, res, next) => {
 
 app.use("/", homeRoutes);
 app.use("/api/v1/auth", authRoutes);
-
-
+ 
+ 
 export default app
